@@ -37,6 +37,13 @@ function M.addSwaggerUrl(url, alias)
 	})
 end
 
+function M.listSwaggerUrls()
+	local urls = swaggerurls:get()
+	for url in urls do
+		print(url)
+	end
+end
+
 function M.setup()
 	vim.api.nvim_create_user_command("SwaggerUi", function(event)
 		local swaggerurl = event.args
@@ -68,5 +75,12 @@ function M.setup()
 		desc = "<url> <url-alias>",
 	})
 end
+
+vim.api.nvim_create_user_command("SwaggerListUrls", function()
+	M.listSwaggerUrls()
+end, {
+	nargs = 0,
+	desc = "Lista as urls cadastradas",
+})
 
 return M
