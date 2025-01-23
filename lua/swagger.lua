@@ -38,10 +38,7 @@ function M.addSwaggerUrl(url, alias)
 end
 
 function M.listSwaggerUrls()
-	local urls = swaggerurls:get()
-	for url in urls do
-		print(url)
-	end
+	vim.inspect(swaggerurls:get({ where = { type = "web" } }))
 end
 
 function M.setup()
