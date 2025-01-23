@@ -1,15 +1,23 @@
 local M = {}
+local sqlite = require("sqlite.db") --- for constructing sql databases
+local tbl = require("sqlite.tbl") --- for constructing sql tables
+local uri = "~/.local/share/nvim/lazy/swagger.vim/swagger.db"
 
-local sqlite = require("sqlite")
----@class Swagger: sqlite_db
----@field swaggerurls sqlite_tbl
+---@class BMEntryTable: sqlite_tbl
+
+---@class BMDatabase: sqlite_db
+---@field swaggerurls BMEntryTable
+
+---@type BMEntryTable
+local swaggerurls = tbl("swaggerurls", {
+	id = true,
+	value = { "text", required = true },
+	alias = { "text", required = true, unique = true },
+})
+---@type BMDatabase
 local db = sqlite({
-	uri = "~/.local/share/nvim/lazy/swagger.vim/swagger.db",
-	swaggerurls = {
-		id = true,
-		value = { "text" },
-		alias = { "text", unique = true },
-	},
+	uri = uri,
+	swaggerurls = swaggerurls,
 })
 
 function M.openSwaggerUi(swaggerurl)
@@ -23,7 +31,7 @@ end
 ---@param url string
 ---@param alias string
 function M.addSwaggerUrl(url, alias)
-	db:insert("swaggerurls", { "alias", "value" }, {
+	swaggerurls:insert({
 		alias = alias,
 		value = url,
 	})
