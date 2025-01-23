@@ -4,8 +4,8 @@ function M.openSwaggerUi(swaggerurl)
 end
 
 function M.setup(opts)
-	vim.api.nvim_create_user_command("SwaggerUi", function(opts)
-		local swaggerurl = opts.args
+	vim.api.nvim_create_user_command("SwaggerUi", function(event)
+		local swaggerurl = event.args
 		M.openSwaggerUi(swaggerurl)
 	end, {
 		nargs = 1,
