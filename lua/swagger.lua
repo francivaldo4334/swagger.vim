@@ -4,6 +4,7 @@ function M.openSwaggerUi(swaggerurl)
 end
 
 function M.setup()
+	local group = vim.api.nvim_create_augroup("swagger", { clear = true })
 	vim.api.nvim_create_user_command("SwaggerUi", function(event)
 		local swaggerurl = event.args
 		M.openSwaggerUi(swaggerurl)
@@ -11,6 +12,15 @@ function M.setup()
 		nargs = 1,
 		desc = "Define a url do swagger que será utilizada.",
 		complete = "swagger",
+	})
+	vim.api.nvim_create_autocmd("AddSwaggerUrl", {
+		group = group,
+		pattern = "swagger_pat",
+		callback = function(event)
+			---@type number
+			local buf = event.buf == 0 and vim.api.nvim_get_current_buf() or event.buf
+			print("hello world")
+		end,
 	})
 end
 
