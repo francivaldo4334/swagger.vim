@@ -23,9 +23,9 @@ end
 ---@param url string
 ---@param alias string
 function M.addSwaggerUrl(url, alias)
-	db:create("swaggerurls", {
-		value = url,
+	db:insert("swaggerurls", { "alias", "value" }, {
 		alias = alias,
+		value = url,
 	})
 end
 
