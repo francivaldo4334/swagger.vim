@@ -37,30 +37,27 @@ function M.openSwaggerUi()
 	local _, url = next(swaggerurls:get({ alias = selectedurl.value }))
 	local httpurl = url.value:gsub("/$", "") .. "/?format=openapi"
 	print("Requisição iniciada!")
-	local spinner_frames = { "/", "-", "\\", "|" }
-	local i = 1
-	vim.schedule(function()
-		vim.fn.timer_start(100, function()
-			vim.api.nvim_out_write("\r" .. spinner_frames[i] .. " Requisição em andamento...")
-			i = (i % #spinner_frames) + 1
-		end, { repeat_ = true })
+	local ok, err = pcall(function()
+		curl.get(httpurl, {
+			callback = function(response)
+				print("Fim da Requisição")
+				if response.status == 200 then
+					print("Resposta recebida com sucesso!")
+					print(response.body)
+				else
+					print("Erro na requisição, status:", response.status)
+					print("Resposta do servidor:", response.body)
+				end
+			end,
+			options = {
+				timeout = 10,
+			},
+		})
 	end)
-	curl.get(httpurl, {
-		callback = function(response)
-			print("Fim da Requisição")
-			vim.schedule(function()
-				vim.api.nvim_out_write("\r") -- Limpa a linha de carregamento
-			end)
-			if response.status == 200 then
-				print(response.body)
-			else
-				print("Erro na requisição, status:", response.status)
-			end
-		end,
-		options = {
-			timeout = 10,
-		},
-	})
+
+	if not ok then
+		print("Erro ao tentar fazer a requisição:", err)
+	end
 end
 
 ---@param url string
