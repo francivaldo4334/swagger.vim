@@ -63,7 +63,9 @@ function M.listSwaggerUrls()
 		cursorline = false,
 		highlight = "PopupColor1",
 		callback = function(win_id, cel)
-			selectedurls:remove(1)
+			if selectedurls:exists() then
+				selectedurls:remove()
+			end
 			selectedurls:insert({
 				id = 1,
 				value = cel,
