@@ -36,9 +36,8 @@ function M.openSwaggerUi()
 	local _, selectedurl = next(selectedurls:get())
 	local _, url = next(swaggerurls:get({ alias = selectedurl.value }))
 	local httpurl = url.value:gsub("/$", "") .. "/?format=openapi"
-	print("Requisição iniciada!")
-	local ok, err = pcall(function()
-		curl.get(httpurl, {
+	local success, response = pcall(function()
+		return curl.get(httpurl, {
 			callback = function(response)
 				print("Fim da Requisição")
 				if response.status == 200 then
@@ -50,13 +49,18 @@ function M.openSwaggerUi()
 				end
 			end,
 			options = {
-				timeout = 10,
+				timeout = 10, -- Ajuste o timeout conforme necessário
 			},
 		})
 	end)
 
-	if not ok then
-		print("Erro ao tentar fazer a requisição:", err)
+	if not success then
+		print("Erro ao fazer a requisição:", response)
+		if string.match(response, "timeout") then
+			print("A requisição excedeu o tempo limite.")
+		else
+			print("Outro erro ocorreu:", response)
+		end
 	end
 end
 
