@@ -52,7 +52,7 @@ function M.openSwaggerUi()
 	local _, url = next(swaggerurls:get({ alias = selectedurl.value }))
 	local httpurl = url.value:gsub("/$", "") .. "/?format=openapi"
 	local _headers = {}
-	for _, it in pairs(heads) do
+	for _, it in ipairs(heads) do
 		_headers[it.key] = it.value
 	end
 	M.show_spinner()
