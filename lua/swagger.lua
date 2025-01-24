@@ -39,7 +39,15 @@ function M.addSwaggerUrl(url, alias)
 end
 
 function M.listSwaggerUrls()
-	local urls = vim.inspect(swaggerurls:get())
+	local urlsstring = vim.inspect(swaggerurls:get())
+	local urls = load("return " .. urlsstring)()
+	local urlOptions = {}
+	local i = 0
+	for _, url in ipairs(urls) do
+		print(vim.inspect(url))
+		-- urlOptions[i] = url.value .. ":" .. url.title
+		i = i + 1
+	end
 	popup.create({ "item1", "item2" }, {
 		title = "Urls",
 		border = true,
