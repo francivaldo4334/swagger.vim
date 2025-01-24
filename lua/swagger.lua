@@ -28,7 +28,7 @@ local db = sqlite({
 })
 
 function M.openSwaggerUi()
-	local selectedurl = next(selectedurls:get())
+	local _, selectedurl = next(selectedurls:get())
 	local url = swaggerurls:get({ alias = selectedurl.value })
 	print(vim.inspect(url))
 end
