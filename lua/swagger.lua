@@ -52,8 +52,10 @@ function M.openSwaggerUi()
 	local _, url = next(swaggerurls:get({ alias = selectedurl.value }))
 	local httpurl = url.value:gsub("/$", "") .. "/?format=openapi"
 	local _headers = {}
-	for _, it in ipairs(heads) do
-		_headers[it.key] = it.value
+	if heads then
+		for _, it in ipairs(heads) do
+			_headers[it.key] = it.value
+		end
 	end
 	M.show_spinner()
 	print("headers: " .. vim.inspect(_headers))
