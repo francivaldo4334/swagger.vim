@@ -39,6 +39,7 @@ function M.openSwaggerUi()
 	print("Requisição iniciada!")
 	curl.get(httpurl, {
 		callback = function(response)
+			print("Callback")
 			if response.status == 200 then
 				print(response.body)
 			else
@@ -47,7 +48,6 @@ function M.openSwaggerUi()
 		end,
 		options = {
 			timeout = 3,
-			insecure = true, -- Desabilitar a verificação de SSL
 			verbose = true, -- Adicionar detalhes da requisição
 		},
 	})
