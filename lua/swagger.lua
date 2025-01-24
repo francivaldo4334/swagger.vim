@@ -27,12 +27,10 @@ local db = sqlite({
 	selectedurls = selectedurls,
 })
 
-function M.openSwaggerUi(swaggerurl)
-	if swaggerurl == "" then
-		print("Error: URL cannot be empty.")
-	else
-		print("Opening Swagger UI with URL: " .. swaggerurl)
-	end
+function M.openSwaggerUi()
+	local selectedurl = next(selectedurls:get())
+	local url = swaggerurls:get({ alias = selectedurl.value })
+	print(vim.inspect(url))
 end
 
 ---@param url string
@@ -45,8 +43,7 @@ function M.addSwaggerUrl(url, alias)
 end
 
 function M.listSwaggerUrls()
-	local urlsstring = vim.inspect(swaggerurls:get())
-	local urls = load("return " .. urlsstring)()
+	local urls = swaggerurls:get()
 	if #urls == 0 then
 		print("Não há dados registrados.")
 		return
@@ -74,10 +71,9 @@ end
 
 function M.setup()
 	vim.api.nvim_create_user_command("SwaggerUi", function(event)
-		local swaggerurl = event.args
-		M.openSwaggerUi(swaggerurl)
+		M.openSwaggerUi()
 	end, {
-		nargs = 1,
+		nargs = 0,
 		desc = "Define a url do swagger que será utilizada.",
 	})
 	vim.api.nvim_create_user_command("SwaggerAddUrl", function(event)
