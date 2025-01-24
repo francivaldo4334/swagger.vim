@@ -41,17 +41,22 @@ end
 function M.listSwaggerUrls()
 	local urlsstring = vim.inspect(swaggerurls:get())
 	local urls = load("return " .. urlsstring)()
+	if #urls == 0 then
+		print("Não há dados registrados.")
+		return
+	end
 	local urlOptions = {}
 	local i = 0
 	for _, url in ipairs(urls) do
-		print(vim.inspect(url))
-		-- urlOptions[i] = url.value .. ":" .. url.title
+		table.insert(urlOptions, i .. "-" .. url.alias)
 		i = i + 1
 	end
-	popup.create({ "item1", "item2" }, {
+	popup.create(urlOptions, {
 		title = "Urls",
 		border = true,
 		enter = true,
+		cursorline = false,
+		highlight = "PopupColor1",
 		callback = function(win_id, cel)
 			print(cel)
 		end,
