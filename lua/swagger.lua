@@ -44,7 +44,10 @@ function M.openSwaggerUi()
 				print("Erro na requisição, status:", response.status)
 			end
 		end,
-		options = { "-k" }, -- Desabilita a verificação de SSL
+		options = {
+			insecure = true, -- Desabilitar a verificação de SSL
+			verbose = true, -- Adicionar detalhes da requisição
+		},
 	})
 end
 
