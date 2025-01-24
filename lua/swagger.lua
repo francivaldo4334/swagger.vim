@@ -196,6 +196,18 @@ end, {
 	nargs = 0,
 	desc = "Remove uma url registrada",
 })
+vim.api.nvim_create_user_command("SwaggerListHeaders", function()
+	print(vim.inspect(headers:get()))
+end, {
+	nargs = 0,
+	desc = "",
+})
+vim.api.nvim_create_user_command("SwaggerRemoveHeaders", function(event)
+	print(vim.inspect(headers:remove({ key = event.args })))
+end, {
+	nargs = 1,
+	desc = "",
+})
 vim.api.nvim_create_user_command("SwaggerSetHeader", function(event)
 	local args = {}
 	local i = 0
