@@ -47,6 +47,7 @@ function M.openSwaggerUi()
 	end)
 	curl.get(httpurl, {
 		callback = function(response)
+			print("Fim da Requisição")
 			vim.schedule(function()
 				vim.api.nvim_out_write("\r") -- Limpa a linha de carregamento
 			end)
