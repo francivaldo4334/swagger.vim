@@ -29,12 +29,11 @@ local db = sqlite({
 })
 
 function M.openSwaggerUi()
-	local keyurl = next(selectedurls:get())
-	if not keyurl then
+	if not selectedurls:exists() then
 		print("Selecione uma url")
 		return
 	end
-	local _, selectedurl = keyurl
+	local _, selectedurl = next(selectedurls:get())
 	local _, url = next(swaggerurls:get({ alias = selectedurl.value }))
 	local httpurl = url.value:gsub("/$", "")
 	print(httpurl)
