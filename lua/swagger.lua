@@ -67,7 +67,6 @@ function M.listSwaggerUrls()
 				selectedurls:remove()
 			end
 			selectedurls:insert({
-				id = 1,
 				value = cel,
 			})
 		end,
