@@ -36,16 +36,18 @@ function M.openSwaggerUi()
 	local _, selectedurl = next(selectedurls:get())
 	local _, url = next(swaggerurls:get({ alias = selectedurl.value }))
 	local httpurl = url.value:gsub("/$", "") .. "/?format=openapi"
+
 	local spinner_frames = { "/", "-", "\\", "|" }
 	local i = 1
-	vim.loop.new_timer():start(
-		0,
-		100,
-		vim.schedule_wrap(function()
+
+	-- Usando vim.schedule para agendar a animação do spinner assíncrona
+	vim.schedule(function()
+		-- Agendar a atualização do spinner a cada 100ms
+		vim.fn.timer_start(100, function()
 			vim.api.nvim_out_write("\r" .. spinner_frames[i] .. " Requisição em andamento...")
 			i = (i % #spinner_frames) + 1
-		end)
-	)
+		end, { repeat_ = true })
+	end)
 	print("Inicio da Requisição")
 	curl.get(httpurl, {
 		callback = function(response)
