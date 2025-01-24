@@ -35,7 +35,7 @@ function M.openSwaggerUi()
 	end
 	local _, selectedurl = next(selectedurls:get())
 	local _, url = next(swaggerurls:get({ alias = selectedurl.value }))
-	local httpurl = url.value:gsub("/$", "") .. "/?format=openai"
+	local httpurl = url.value:gsub("/$", "") .. "/?format=openapi"
 	print("Requisição iniciada!")
 	curl.get(httpurl, {
 		callback = function(response)
