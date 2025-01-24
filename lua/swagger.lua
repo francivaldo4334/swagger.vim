@@ -40,13 +40,13 @@ function M.openSwaggerUi()
 	curl.get(httpurl, {
 		callback = function(response)
 			if response.status == 200 then
-				print(vim.inspect(response.body))
+				print(response.body)
 			else
 				print("Erro na requisição, status:", response.status)
 			end
 		end,
 		options = {
-			timeout = 5,
+			timeout = 3,
 			insecure = true, -- Desabilitar a verificação de SSL
 			verbose = true, -- Adicionar detalhes da requisição
 		},
