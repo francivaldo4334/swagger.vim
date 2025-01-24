@@ -30,7 +30,8 @@ local db = sqlite({
 function M.openSwaggerUi()
 	local _, selectedurl = next(selectedurls:get())
 	local _, url = next(swaggerurls:get({ alias = selectedurl.value }))
-	print(vim.inspect(url))
+	local httpurl = url.value:gsub("/$", "")
+	print(httpurl)
 end
 
 ---@param url string
@@ -39,6 +40,31 @@ function M.addSwaggerUrl(url, alias)
 	swaggerurls:insert({
 		alias = alias,
 		value = url,
+	})
+end
+
+function M.removeSwaggerUrl()
+	local urls = swaggerurls:get()
+	if #urls == 0 then
+		print("Não há dados registrados.")
+		return
+	end
+	local urlOptions = {}
+	local i = 0
+	for _, url in ipairs(urls) do
+		table.insert(urlOptions, url.id .. " " .. url.alias)
+		i = i + 1
+	end
+	popup.create(urlOptions, {
+		title = "Urls",
+		border = true,
+		enter = true,
+		cursorline = false,
+		highlight = "PopupColor1",
+		callback = function(win_id, cel)
+			local id = string.gmatch(cel, "[^%s]+")()
+			selectedurls:remove({ id = id })
+		end,
 	})
 end
 
@@ -100,11 +126,17 @@ function M.setup()
 	})
 end
 
-vim.api.nvim_create_user_command("SwaggerListUrls", function()
+vim.api.nvim_create_user_command("SwaggerSelectUrl", function()
 	M.listSwaggerUrls()
 end, {
 	nargs = 0,
 	desc = "Lista as urls cadastradas",
+})
+vim.api.nvim_create_user_command("SwaggerRemoveUrl", function()
+	M.removeSwaggerUrl()
+end, {
+	nargs = 0,
+	desc = "Remove uma url registrada",
 })
 
 return M
