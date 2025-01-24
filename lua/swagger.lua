@@ -15,6 +15,11 @@ local swaggerurls = tbl("swaggerurls", {
 	value = { "text", required = true },
 	alias = { "text", required = true, unique = true },
 })
+---@type BMEntryTable
+local selectedurls = tbl("selectedurls", {
+	id = true,
+	value = { "text" },
+})
 ---@type BMDatabase
 local db = sqlite({
 	uri = uri,
@@ -48,7 +53,7 @@ function M.listSwaggerUrls()
 	local urlOptions = {}
 	local i = 0
 	for _, url in ipairs(urls) do
-		table.insert(urlOptions, i .. "-" .. url.alias)
+		table.insert(urlOptions, url.alias)
 		i = i + 1
 	end
 	popup.create(urlOptions, {
@@ -58,7 +63,10 @@ function M.listSwaggerUrls()
 		cursorline = false,
 		highlight = "PopupColor1",
 		callback = function(win_id, cel)
-			print(cel)
+			selectedurls:remove()
+			selectedurls:insert({
+				value = cel,
+			})
 		end,
 	})
 end
