@@ -2,6 +2,7 @@ local M = {}
 local sqlite = require("sqlite.db")
 local tbl = require("sqlite.tbl")
 local popup = require("plenary.popup")
+local curl = require("plenary.curl")
 local uri = "~/.local/share/nvim/lazy/swagger.vim/swagger.db"
 
 ---@class BMEntryTable: sqlite_tbl
@@ -28,7 +29,12 @@ local db = sqlite({
 })
 
 function M.openSwaggerUi()
-	local _, selectedurl = next(selectedurls:get())
+	local keyurl = next(selectedurls:get())
+	if not keyurl then
+		print("Selecione uma url")
+		return
+	end
+	local _, selectedurl = keyurl
 	local _, url = next(swaggerurls:get({ alias = selectedurl.value }))
 	local httpurl = url.value:gsub("/$", "")
 	print(httpurl)
