@@ -27,6 +27,31 @@ local db = sqlite({
 	swaggerurls = swaggerurls,
 	selectedurls = selectedurls,
 })
+function M.show_spinner()
+	-- Cria um buffer dedicado para o spinner
+	local spinner_buf = vim.api.nvim_create_buf(false, true) -- (list, scratch)
+	vim.api.nvim_open_win(spinner_buf, true, { relative = "editor", row = 0, col = 0, width = 20, height = 1 })
+
+	-- Definir as animações do spinner
+	local spinner_frames = { "/", "-", "\\", "|" }
+	local i = 1
+	local timer_id = vim.fn.timer_start(100, function()
+		-- Escreve o próximo frame do spinner no buffer
+		vim.api.nvim_buf_set_lines(spinner_buf, 0, -1, false, { spinner_frames[i] .. " Requisição em andamento..." })
+		i = (i % #spinner_frames) + 1
+	end, { repeat_ = true })
+
+	-- Retornar a ID do timer e o buffer para usar na função de parar
+	return spinner_buf, timer_id
+end
+
+-- Função para esconder o spinner
+function M.hide_spinner(spinner_buf, timer_id)
+	-- Para o timer do spinner
+	vim.fn.timer_stop(timer_id)
+	-- Fecha o buffer dedicado
+	vim.api.nvim_buf_delete(spinner_buf, { force = true })
+end
 
 function M.openSwaggerUi()
 	if not selectedurls:exists() then
@@ -37,20 +62,11 @@ function M.openSwaggerUi()
 	local _, url = next(swaggerurls:get({ alias = selectedurl.value }))
 	local httpurl = url.value:gsub("/$", "") .. "/?format=openapi"
 
-	local spinner_frames = { "/", "-", "\\", "|" }
-	local i = 1
-
-	-- Usando vim.schedule para agendar a animação do spinner assíncrona
-	vim.schedule(function()
-		-- Agendar a atualização do spinner a cada 100ms
-		vim.fn.timer_start(100, function()
-			vim.api.nvim_out_write("\r" .. spinner_frames[i] .. " Requisição em andamento...")
-			i = (i % #spinner_frames) + 1
-		end, { repeat_ = true })
-	end)
+	M.show_spinner()
 	print("Inicio da Requisição")
 	curl.get(httpurl, {
 		callback = function(response)
+			M.hide_spinner()
 			print("Fim da Requisição")
 			if response.status == 200 then
 				print("Resposta recebida com sucesso!")
