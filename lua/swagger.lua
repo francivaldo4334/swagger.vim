@@ -44,6 +44,7 @@ function M.openSwaggerUi()
 				print("Erro na requisição")
 			end
 		end,
+		options = { "-k" },
 	})
 end
 
