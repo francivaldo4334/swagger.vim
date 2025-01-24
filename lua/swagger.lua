@@ -48,7 +48,7 @@ function M.openSwaggerUi()
 		return
 	end
 	local _, selectedurl = next(selectedurls:get())
-	local _, heads = next(headers:get())
+	local heads = headers:get()
 	local _, url = next(swaggerurls:get({ alias = selectedurl.value }))
 	local httpurl = url.value:gsub("/$", "") .. "/?format=openapi"
 	local _headers = {}
