@@ -63,7 +63,7 @@ function M.removeSwaggerUrl()
 		highlight = "PopupColor1",
 		callback = function(win_id, cel)
 			local id = string.gmatch(cel, "[^%s]+")()
-			selectedurls:remove({ id = id })
+			swaggerurls:remove({ id = id })
 		end,
 	})
 end
