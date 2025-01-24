@@ -28,29 +28,12 @@ local db = sqlite({
 	selectedurls = selectedurls,
 })
 function M.show_spinner()
-	-- Cria um buffer dedicado para o spinner
-	local spinner_buf = vim.api.nvim_create_buf(false, true) -- (list, scratch)
-	vim.api.nvim_open_win(spinner_buf, true, { relative = "editor", row = 0, col = 0, width = 20, height = 1 })
-
-	-- Definir as animações do spinner
-	local spinner_frames = { "/", "-", "\\", "|" }
-	local i = 1
-	local timer_id = vim.fn.timer_start(100, function()
-		-- Escreve o próximo frame do spinner no buffer
-		vim.api.nvim_buf_set_lines(spinner_buf, 0, -1, false, { spinner_frames[i] .. " Requisição em andamento..." })
-		i = (i % #spinner_frames) + 1
-	end, { repeat_ = true })
-
-	-- Retornar a ID do timer e o buffer para usar na função de parar
-	return spinner_buf, timer_id
+	-- TODO:
 end
 
 -- Função para esconder o spinner
 function M.hide_spinner(spinner_buf, timer_id)
-	-- Para o timer do spinner
-	vim.fn.timer_stop(timer_id)
-	-- Fecha o buffer dedicado
-	vim.api.nvim_buf_delete(spinner_buf, { force = true })
+	-- TODO:
 end
 
 function M.openSwaggerUi()
@@ -78,6 +61,7 @@ function M.openSwaggerUi()
 		end,
 		options = {
 			timeout = 5, -- Ajuste o timeout conforme necessário
+			"-k",
 		},
 	})
 end
