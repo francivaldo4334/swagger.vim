@@ -41,10 +41,10 @@ function M.openSwaggerUi()
 			if response.status == 200 then
 				print(vim.inspect(response.body))
 			else
-				print("Erro na requisição")
+				print("Erro na requisição, status:", response.status)
 			end
 		end,
-		options = { "-k" },
+		options = { "-k" }, -- Desabilita a verificação de SSL
 	})
 end
 
