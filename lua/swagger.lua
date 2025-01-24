@@ -36,32 +36,32 @@ function M.openSwaggerUi()
 	local _, selectedurl = next(selectedurls:get())
 	local _, url = next(swaggerurls:get({ alias = selectedurl.value }))
 	local httpurl = url.value:gsub("/$", "") .. "/?format=openapi"
-	local success, response = pcall(function()
-		return curl.get(httpurl, {
-			callback = function(response)
-				print("Fim da Requisição")
-				if response.status == 200 then
-					print("Resposta recebida com sucesso!")
-					print(response.body)
-				else
-					print("Erro na requisição, status:", response.status)
-					print("Resposta do servidor:", response.body)
-				end
-			end,
-			options = {
-				timeout = 10, -- Ajuste o timeout conforme necessário
-			},
-		})
-	end)
-
-	if not success then
-		print("Erro ao fazer a requisição:", response)
-		if string.match(response, "timeout") then
-			print("A requisição excedeu o tempo limite.")
-		else
-			print("Outro erro ocorreu:", response)
-		end
-	end
+	local spinner_frames = { "/", "-", "\\", "|" }
+	local i = 1
+	vim.loop.new_timer():start(
+		0,
+		100,
+		vim.schedule_wrap(function()
+			vim.api.nvim_out_write("\r" .. spinner_frames[i] .. " Requisição em andamento...")
+			i = (i % #spinner_frames) + 1
+		end)
+	)
+	print("Inicio da Requisição")
+	curl.get(httpurl, {
+		callback = function(response)
+			print("Fim da Requisição")
+			if response.status == 200 then
+				print("Resposta recebida com sucesso!")
+				print(response.body)
+			else
+				print("Erro na requisição, status:", response.status)
+				print("Resposta do servidor:", response.body)
+			end
+		end,
+		options = {
+			timeout = 5, -- Ajuste o timeout conforme necessário
+		},
+	})
 end
 
 ---@param url string
