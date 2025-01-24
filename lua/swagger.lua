@@ -56,6 +56,7 @@ function M.openSwaggerUi()
 		_headers[it.key] = it.value
 	end
 	M.show_spinner()
+	print("headers: " .. vim.inspect(_headers))
 	print("Inicio da Requisição")
 	curl.get(httpurl, {
 		callback = function(response)
