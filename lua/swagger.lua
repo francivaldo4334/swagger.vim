@@ -21,11 +21,17 @@ local selectedurls = tbl("selectedurls", {
 	id = true,
 	value = { "text" },
 })
+---@type BMEntryTable
+local headers = tbl("headers", {
+	key = { "text", primary = true, required = true },
+	value = { "text" },
+})
 ---@type BMDatabase
 local db = sqlite({
 	uri = uri,
 	swaggerurls = swaggerurls,
 	selectedurls = selectedurls,
+	headers = headers,
 })
 function M.show_spinner()
 	-- TODO:
@@ -42,9 +48,13 @@ function M.openSwaggerUi()
 		return
 	end
 	local _, selectedurl = next(selectedurls:get())
+	local _, heads = next(headers:get())
 	local _, url = next(swaggerurls:get({ alias = selectedurl.value }))
 	local httpurl = url.value:gsub("/$", "") .. "/?format=openapi"
-
+	local _headers = {}
+	for _, it in pairs(heads) do
+		_headers[it.key] = it.value
+	end
 	M.show_spinner()
 	print("Inicio da Requisição")
 	curl.get(httpurl, {
@@ -61,7 +71,7 @@ function M.openSwaggerUi()
 		end,
 		options = {
 			timeout = 5, -- Ajuste o timeout conforme necessário
-			"-k",
+			headers = _headers,
 		},
 	})
 end
@@ -73,6 +83,22 @@ function M.addSwaggerUrl(url, alias)
 		alias = alias,
 		value = url,
 	})
+end
+
+function M.setHeaderSwagger(k, v)
+	local h = { key = k, value = v }
+	local check = headers:get({ key = k })
+	if check then
+		check = next(check)
+		if check then
+			headers:update({
+				where = { key = k },
+				set = h,
+			})
+			return
+		end
+	end
+	headers:insert(h)
 end
 
 function M.removeSwaggerUrl()
@@ -168,6 +194,24 @@ vim.api.nvim_create_user_command("SwaggerRemoveUrl", function()
 	M.removeSwaggerUrl()
 end, {
 	nargs = 0,
+	desc = "Remove uma url registrada",
+})
+vim.api.nvim_create_user_command("SwaggerSetHeader", function(event)
+	local args = {}
+	local i = 0
+	for arg in string.gmatch(event.args, "[^%s]+") do
+		args[i] = arg
+		i = i + 1
+	end
+	local key = args[0]
+	local value = args[1]
+	if not ke or not value then
+		print("os paramentos chave e valor são obrigatorios")
+		return
+	end
+	M.setHeaderSwagger(key, value)
+end, {
+	nargs = "*",
 	desc = "Remove uma url registrada",
 })
 
