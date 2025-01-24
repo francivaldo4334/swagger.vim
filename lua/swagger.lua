@@ -27,7 +27,20 @@ local db = sqlite({
 	swaggerurls = swaggerurls,
 	selectedurls = selectedurls,
 })
+local function show_spinner()
+	-- Função simples para mostrar um "spinner"
+	local spinner_frames = { "/", "-", "\\", "|" }
+	local i = 1
+	vim.fn.timer_start(100, function()
+		vim.api.nvim_out_write("\r" .. spinner_frames[i] .. " Requisição em andamento...")
+		i = (i % #spinner_frames) + 1
+	end, { repeat_ = true })
+end
 
+local function hide_spinner()
+	-- Remove o spinner da tela
+	vim.api.nvim_out_write("\r") -- Limpa a linha de carregamento
+end
 function M.openSwaggerUi()
 	if not selectedurls:exists() then
 		print("Selecione uma url")
@@ -37,8 +50,10 @@ function M.openSwaggerUi()
 	local _, url = next(swaggerurls:get({ alias = selectedurl.value }))
 	local httpurl = url.value:gsub("/$", "") .. "/?format=openapi"
 	print("Requisição iniciada!")
+	show_spinner()
 	curl.get(httpurl, {
 		callback = function(response)
+			hide_spinner()
 			if response.status == 200 then
 				print(response.body)
 			else
