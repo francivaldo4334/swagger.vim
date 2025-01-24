@@ -36,6 +36,7 @@ function M.openSwaggerUi()
 	local _, selectedurl = next(selectedurls:get())
 	local _, url = next(swaggerurls:get({ alias = selectedurl.value }))
 	local httpurl = url.value:gsub("/$", "") .. "/?format=openai"
+	print("Requisição iniciada!")
 	curl.get(httpurl, {
 		callback = function(response)
 			if response.status == 200 then
