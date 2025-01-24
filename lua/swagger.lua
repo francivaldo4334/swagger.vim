@@ -24,6 +24,7 @@ local selectedurls = tbl("selectedurls", {
 local db = sqlite({
 	uri = uri,
 	swaggerurls = swaggerurls,
+	selectedurls = selectedurls,
 })
 
 function M.openSwaggerUi(swaggerurl)
