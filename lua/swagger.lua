@@ -217,7 +217,7 @@ vim.api.nvim_create_user_command("SwaggerSetHeader", function(event)
 	end
 	local key = args[0]
 	local value = args[1]
-	if not ke or not value then
+	if not key or not value then
 		print("os paramentos chave e valor são obrigatorios")
 		return
 	end
