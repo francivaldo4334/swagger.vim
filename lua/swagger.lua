@@ -35,8 +35,13 @@ function M.openSwaggerUi()
 	end
 	local _, selectedurl = next(selectedurls:get())
 	local _, url = next(swaggerurls:get({ alias = selectedurl.value }))
-	local httpurl = url.value:gsub("/$", "")
-	print(httpurl)
+	local httpurl = url.value:gsub("/$", "") .. "/?format=openai"
+	local response = curl.get(httpurl)
+	if response.status == 200 then
+		print(vim.inspect(response.body))
+	else
+		print("Erro na requisição")
+	end
 end
 
 ---@param url string
