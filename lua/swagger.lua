@@ -45,6 +45,7 @@ function M.openSwaggerUi()
 			end
 		end,
 		options = {
+			timeout = 5,
 			insecure = true, -- Desabilitar a verificação de SSL
 			verbose = true, -- Adicionar detalhes da requisição
 		},
