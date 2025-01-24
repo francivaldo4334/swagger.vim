@@ -1,6 +1,7 @@
 local M = {}
-local sqlite = require("sqlite.db") --- for constructing sql databases
-local tbl = require("sqlite.tbl") --- for constructing sql tables
+local sqlite = require("sqlite.db")
+local tbl = require("sqlite.tbl")
+local popup = require("plenary.popup")
 local uri = "~/.local/share/nvim/lazy/swagger.vim/swagger.db"
 
 ---@class BMEntryTable: sqlite_tbl
@@ -38,7 +39,8 @@ function M.addSwaggerUrl(url, alias)
 end
 
 function M.listSwaggerUrls()
-	print(vim.inspect(swaggerurls:get()))
+	local urls = vim.inspect(swaggerurls:get())
+	popup.create({ "item1", "item2" }, { title = "Urls" })
 end
 
 function M.setup()
