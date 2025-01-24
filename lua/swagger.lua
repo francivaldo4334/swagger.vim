@@ -40,7 +40,14 @@ end
 
 function M.listSwaggerUrls()
 	local urls = vim.inspect(swaggerurls:get())
-	popup.create({ "item1", "item2" }, { title = "Urls" })
+	popup.create({ "item1", "item2" }, {
+		title = "Urls",
+		border = true,
+		enter = true,
+		callback = function(win_id, cel)
+			print(cel)
+		end,
+	})
 end
 
 function M.setup()
