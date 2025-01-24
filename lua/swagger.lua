@@ -37,7 +37,7 @@ function M.openSwaggerUi()
 	local _, url = next(swaggerurls:get({ alias = selectedurl.value }))
 	local httpurl = url.value:gsub("/$", "") .. "/?format=openapi"
 	print("Requisição iniciada!")
-	local response = curl.get(httpurl, { timeout = 5 })
+	local response = curl.get(httpurl)
 	if response.status == 200 then
 		print(response.body)
 	else
